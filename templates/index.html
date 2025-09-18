@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lex UZ AI Kodeks</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; text-align: center; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"], textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px; }
+        button { background-color: #007bff; color: white; padding: 12px 24px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #0056b3; }
+        .status { margin-top: 20px; padding: 15px; border-radius: 5px; }
+        .status.pending { background-color: #fff3cd; border: 1px solid #ffeaa7; }
+        .status.processing { background-color: #d1ecf1; border: 1px solid #bee5eb; }
+        .status.completed { background-color: #d4edda; border: 1px solid #c3e6cb; }
+        .status.failed { background-color: #f8d7da; border: 1px solid #f5c6cb; }
+        .answer { margin-top: 20px; padding: 20px; background-color: #f8f9fa; border-left: 4px solid #007bff; }
+        .progress-bar { width: 100%; height: 20px; background-color: #e9ecef; border-radius: 10px; overflow: hidden; }
+        .progress-fill { height: 100%; background-color: #007bff; transition: width 0.3s ease; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 Lex UZ AI Kodeks</h1>
+        
+        <div class="form-group">
+            <label for="question">Ask a question:</label>
+            <textarea id="question" rows="3" placeholder="Enter your question here..."></textarea>
+        </div>
+        <button onclick="submitQuestion()">Submit Question</button>
+        
+        <div id="status" class="status" style="display: none;"></div>
+        <div id="answer" class="answer" style="display: none;"></div>
+    </div>
+
+    <script>
+        let currentQuestionId = null;
+        let statusInterval = null;
+
+        async function submitQuestion() {
+            const question = document.getElementById('question').value.trim();
+            if (!question) {
+                alert('Please enter a question');
+                return;
+            }
+
+            try {
+                const response = await fetch('/question', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question: question })
+                });
+                const result = await response.json();
+                currentQuestionId = result.question_id;
+                
+                document.getElementById('status').style.display = 'block';
+                document.getElementById('status').className = 'status pending';
+                document.getElementById('status').innerHTML = '⏳ Question submitted. Processing...';
+                
+                // Start polling for status
+                statusInterval = setInterval(checkStatus, 2000);
+            } catch (error) {
+                alert('Error submitting question: ' + error.message);
+            }
+        }
+
+        async function checkStatus() {
+            if (!currentQuestionId) return;
+
+            try {
+                const response = await fetch(`/question/${currentQuestionId}/status`);
+                const status = await response.json();
+                
+                const statusDiv = document.getElementById('status');
+                statusDiv.className = 'status ' + status.status;
+                
+                let progressHtml = '';
+                if (status.progress > 0) {
+                    progressHtml = `
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${status.progress}%"></div>
+                        </div>
+                    `;
+                }
+                
+                statusDiv.innerHTML = `
+                    <strong>Status:</strong> ${status.status}<br>
+                    <strong>Step:</strong> ${status.step}<br>
+                    <strong>Message:</strong> ${status.message}<br>
+                    ${progressHtml}
+                `;
+                
+                if (status.is_ready) {
+                    clearInterval(statusInterval);
+                    await fetchAnswer();
+                }
+            } catch (error) {
+                console.error('Error checking status:', error);
+            }
+        }
+
+        async function fetchAnswer() {
+            try {
+                const response = await fetch(`/question/${currentQuestionId}/response`);
+                const answer = await response.json();
+                
+                document.getElementById('answer').style.display = 'block';
+                document.getElementById('answer').innerHTML = `
+                    <h3>Question:</h3>
+                    <p>${answer.question}</p>
+                    <h3>Answer:</h3>
+                    <p>${answer.answer}</p>
+                `;
+            } catch (error) {
+                console.error('Error fetching answer:', error);
+            }
+        }
+    </script>
+</body>
+</html>

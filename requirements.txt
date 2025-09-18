@@ -1,0 +1,34 @@
+# Core FastAPI dependencies
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+
+# Database
+sqlalchemy==2.0.23
+psycopg2-binary==2.9.9
+
+# Data processing
+pandas==2.0.3
+numpy==1.24.3
+
+# Machine Learning
+torch==2.0.1
+transformers==4.35.2
+sentence-transformers==2.2.2
+faiss-cpu==1.7.4
+huggingface_hub==0.17.3
+sentencepiece==0.1.99
+protobuf==3.20.3
+
+# Templates and files
+jinja2==3.1.2
+aiofiles==23.2.1
+
+# Configuration and logging
+python-dotenv==1.0.0
+loguru==0.7.2
+pydantic==2.5.0
+
+# Background task processing
+celery==5.3.4
+redis==5.0.1

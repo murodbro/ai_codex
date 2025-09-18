@@ -1,0 +1,102 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env
+pip-log.txt
+pip-delete-this-directory.txt
+.tox
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git
+.mypy_cache
+.pytest_cache
+.hypothesis
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Project specific - exclude data and model directories
+logs/
+*.log
+uploads/
+vector_db/
+data/
+knowledge_retrieval.db
+*.db
+
+# Model directories and cache
+models/
+*.bin
+*.safetensors
+*.h5
+*.pkl
+*.pth
+*.pt
+*.ckpt
+*.model
+*.weights
+*.onnx
+
+# Hugging Face cache
+.cache/
+huggingface/
+transformers_cache/
+torch_cache/
+
+# Large model files
+*.gguf
+*.ggml
+*.bin
+*.safetensors
+
+# Documentation
+README.md
+*.md
+docs/
+
+# Test files
+test_*.py
+*_test.py
+tests/
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Other
+.env
+.env.local
+.env.*.local
