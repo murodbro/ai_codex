@@ -11,8 +11,8 @@ class Config:
     VECTOR_DB_PATH = os.getenv("VECTOR_DB_PATH", "/app/vector_db")
     EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
     
-    # LLM
-    LLM_MODEL = os.getenv("LLM_MODEL", "meta-llama/Llama-2-7b-chat-hf")
+    # LLM - Using a non-gated model that works well
+    LLM_MODEL = os.getenv("LLM_MODEL", "microsoft/DialoGPT-medium")
     MAX_LENGTH = int(os.getenv("MAX_LENGTH", "512"))
     
     # Llama specific settings

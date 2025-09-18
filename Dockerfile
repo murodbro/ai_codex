@@ -1,6 +1,8 @@
-FROM python:3.9-slim
+FROM python:3.10-slim
 
-WORKDIR /app
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
 
 # Install system dependencies for large file processing
 RUN apt-get update && apt-get install -y \
@@ -10,15 +12,24 @@ RUN apt-get update && apt-get install -y \
     libffi-dev \
     libssl-dev \
     htop \
+    curl \
     && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app
 
 # Upgrade pip and install build tools
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
 # Copy requirements and install dependencies
 COPY requirements.txt .
+
+# Install PyTorch with CUDA support first
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+    pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+
+# Install other dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Create only essential directories (data will be mounted as volumes)
 RUN mkdir -p /app/logs && \

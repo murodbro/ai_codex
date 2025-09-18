@@ -12,13 +12,14 @@ pandas==2.0.3
 numpy==1.24.3
 
 # Machine Learning
-torch==2.0.1
+# torch is installed separately in Dockerfile with CUDA support
 transformers==4.35.2
 sentence-transformers==2.2.2
 faiss-cpu==1.7.4
 huggingface_hub==0.17.3
 sentencepiece==0.1.99
 protobuf==3.20.3
+accelerate==0.24.1
 
 # Templates and files
 jinja2==3.1.2

@@ -25,6 +25,13 @@ celery_app.conf.update(
     task_acks_late=True,
     worker_disable_rate_limits=True,
     result_expires=3600,  # Results expire after 1 hour
+    # Fix CUDA multiprocessing issue
+    worker_pool='solo',  # Use solo pool to avoid CUDA fork issues
+    worker_concurrency=1,  # Single worker to avoid CUDA conflicts
+    # Fix Redis serialization issues
+    result_backend_transport_options={'master_name': 'mymaster'},
+    result_compression='gzip',
+    task_compression='gzip',
 )
 
 # Task routing
